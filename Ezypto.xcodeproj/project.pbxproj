@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		3493E1A32D72186B00876F7F /* web3swift in Frameworks */ = {isa = PBXBuildFile; productRef = 3493E1A22D72186B00876F7F /* web3swift */; };
+		3493E1A62D72299D00876F7F /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3493E1A52D72299D00876F7F /* SnapKit */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		3493E16E2D720C8300876F7F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -65,6 +70,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3493E1A32D72186B00876F7F /* web3swift in Frameworks */,
+				3493E1A62D72299D00876F7F /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,6 +132,8 @@
 			);
 			name = Ezypto;
 			packageProductDependencies = (
+				3493E1A22D72186B00876F7F /* web3swift */,
+				3493E1A52D72299D00876F7F /* SnapKit */,
 			);
 			productName = Ezypto;
 			productReference = 3493E1572D720C8100876F7F /* Ezypto.app */;
@@ -208,6 +217,10 @@
 			);
 			mainGroup = 3493E14E2D720C8100876F7F;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				3493E1A12D7217E700876F7F /* XCRemoteSwiftPackageReference "web3swift" */,
+				3493E1A42D72299D00876F7F /* XCRemoteSwiftPackageReference "SnapKit" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3493E1582D720C8100876F7F /* Products */;
 			projectDirPath = "";
@@ -581,6 +594,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		3493E1A12D7217E700876F7F /* XCRemoteSwiftPackageReference "web3swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/web3swift-team/web3swift";
+			requirement = {
+				kind = exactVersion;
+				version = 3.3.0;
+			};
+		};
+		3493E1A42D72299D00876F7F /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3493E1A22D72186B00876F7F /* web3swift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3493E1A12D7217E700876F7F /* XCRemoteSwiftPackageReference "web3swift" */;
+			productName = web3swift;
+		};
+		3493E1A52D72299D00876F7F /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3493E1A42D72299D00876F7F /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3493E14F2D720C8100876F7F /* Project object */;
 }
