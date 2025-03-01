@@ -19,7 +19,7 @@ final class WelcomeCoordinator: Coordinator, Presentable {
             case .createWallet:
                 self?.routeToCreateWallet()
             case .importWallet:
-                break
+                self?.routeToImportWallet()
             }
         }
         return viewController
@@ -42,6 +42,14 @@ final class WelcomeCoordinator: Coordinator, Presentable {
 extension WelcomeCoordinator {
     private func routeToCreateWallet() {
         onRoute?(.home)
+    }
+
+    private func routeToImportWallet() {
+        let coordinator = ImportWalletCoordinator(router: router)
+        addChild(coordinator)
+        router.push(coordinator, animated: true) { [weak self, weak coordinator] in
+            self?.removeChild(coordinator)
+        }
     }
 }
 

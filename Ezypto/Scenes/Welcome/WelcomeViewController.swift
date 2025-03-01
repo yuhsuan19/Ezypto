@@ -16,25 +16,22 @@ final class WelcomeViewController: UIViewController {
 
     private lazy var welcomeLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Welcome to"
-        label.font = UIFont.systemFont(ofSize: 26)
+        label.font = .systemFont(ofSize: 26)
         label.textColor = AppColor.mainText
         return label
     }()
 
     private lazy var appNameLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Ezypto"
-        label.font = UIFont.systemFont(ofSize: 48, weight: .heavy)
+        label.font = .systemFont(ofSize: 48, weight: .heavy)
         label.textColor = AppColor.main
         return label
     }()
 
     private lazy var welcomeLabelVStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [welcomeLabel, appNameLabel])
-        stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.alignment = .leading
         stackView.distribution = .fill
@@ -54,7 +51,6 @@ final class WelcomeViewController: UIViewController {
 
     private lazy var buttonVStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [createNewWalletButton, importWalletButton])
-        stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fill

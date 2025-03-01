@@ -30,7 +30,6 @@ final class ActionButton: UIButton {
 // MARK: - Private functions
 extension ActionButton {
     private func setUpViews() {
-        translatesAutoresizingMaskIntoConstraints = false
         snp.makeConstraints {
             $0.height.equalTo(48)
         }

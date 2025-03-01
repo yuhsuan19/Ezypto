@@ -1,0 +1,57 @@
+//
+//  ImportWalletViewModel.swift
+//  Ezypto
+//
+//  Created by Shane Chi on 2025/3/2.
+//
+
+import Foundation
+import RxSwift
+import RxRelay
+
+final class ImportWalletViewModel {
+
+    let recoveryPhrasesRelay: BehaviorRelay<[String]> = .init(value: [])
+    let isRecoveryPhraseCompleted: BehaviorRelay<Bool> = .init(value: false)
+    let clearTextFieldSubject: PublishSubject<Void> = .init()
+
+    private let disposeBag = DisposeBag()
+
+    init() {
+        setUpBindings()
+    }
+
+    func numberOfItems() -> Int {
+        return recoveryPhrasesRelay.value.count
+    }
+
+    func recoveryPhrase(at index: Int) -> String {
+        return recoveryPhrasesRelay.value[index]
+    }
+
+    func add(phrase: String?) {
+        guard let phrase else {
+            return
+        }
+        let trimmed = phrase.lowercased().filter { $0.isLetter }
+        guard !trimmed.isEmpty else {
+            return
+        }
+        recoveryPhrasesRelay.accept(recoveryPhrasesRelay.value + [trimmed])
+        clearTextFieldSubject.onNext(())
+    }
+}
+
+extension ImportWalletViewModel {
+
+    private func setUpBindings() {
+        recoveryPhrasesRelay.subscribe(onNext: { [weak self] _ in
+            self?.checkRecoveryPhraseCompleted()
+        })
+        .disposed(by: disposeBag)
+    }
+
+    private func checkRecoveryPhraseCompleted() {
+        isRecoveryPhraseCompleted.accept(recoveryPhrasesRelay.value.count == 12)
+    }
+}
