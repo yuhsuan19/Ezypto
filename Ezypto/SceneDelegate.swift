@@ -11,6 +11,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
+    private lazy var mainWindow: UIWindow = UIWindow(frame: UIScreen.main.bounds)
+    private lazy var coordinator: AppCoordinator = AppCoordinator(window: mainWindow)
+
     func scene(
         _ scene: UIScene, willConnectTo session: UISceneSession,
         options connectionOptions: UIScene.ConnectionOptions
@@ -19,10 +22,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
-        window = UIWindow(frame: windowScene.coordinateSpace.bounds)
+        window = mainWindow
         window?.windowScene = windowScene
-        window?.rootViewController = WelcomeViewController()
-        window?.makeKeyAndVisible()
+        coordinator.start()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

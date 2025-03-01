@@ -9,13 +9,13 @@ import Foundation
 
 class Coordinator: NSObject {
 
-    public var children: [Coordinator] = []
+    var children: [Coordinator] = []
 
-    public func addChild(_ coordinator: Coordinator) {
+    func addChild(_ coordinator: Coordinator) {
         children.append(coordinator)
     }
 
-    public func removeChild(_ coordinator: Coordinator?) {
+    func removeChild(_ coordinator: Coordinator?) {
         guard let coordinator = coordinator,
             let index = children.firstIndex(of: coordinator)
         else {
@@ -25,7 +25,7 @@ class Coordinator: NSObject {
         children.remove(at: index)
     }
 
-    public func removeAllChildren() {
+    func removeAllChildren() {
         children.removeAll()
     }
 }

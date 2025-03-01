@@ -16,7 +16,10 @@ final class NavigationRouter: NSObject, NavigationRouterType {
     private var poppedCompletions: [UIViewController: () -> Void]
     private let hidesAllBottomBarWhenPush: Bool
 
-    init(navigationController: UINavigationController, hidesAllBottomBarWhenPush: Bool = false) {
+    init(
+        navigationController: UINavigationController = UINavigationController(),
+        hidesAllBottomBarWhenPush: Bool = false
+    ) {
         self.navigationController = navigationController
         self.hidesAllBottomBarWhenPush = hidesAllBottomBarWhenPush
         self.poppedCompletions = [:]
