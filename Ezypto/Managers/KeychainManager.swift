@@ -8,6 +8,11 @@
 import Foundation
 import Security
 
+protocol KeychainManagerProtocol {
+    func saveMnemonicToKeychain(mnemonic: String) throws
+    func loadMnemonicToKeychain() -> String?
+}
+
 final class KeychainManager {
     static let attrService: String = "ezypto.wallet"
     static let mnemonicAttrAccount: String = "user_mnemonic"
