@@ -45,6 +45,13 @@ final class ImportWalletViewModel {
         clearTextFieldSubject.onNext(())
     }
 
+    func removePhrase(at index: Int) {
+        guard index < recoveryPhrasesRelay.value.count else { return }
+        var phrases = recoveryPhrasesRelay.value
+        phrases.remove(at: index)
+        recoveryPhrasesRelay.accept(phrases)
+    }
+
     func createWallet() {
         do {
             let mnemonics = try MnemonicsHelper.join(phrases: recoveryPhrasesRelay.value)

@@ -188,6 +188,10 @@ extension ImportWalletViewController: UICollectionViewDelegate, UICollectionView
         cell.update(phrase: viewModel.displayModel(at: indexPath.item))
         return cell
     }
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        viewModel.removePhrase(at: indexPath.item)
+    }
 }
 
 // MARK: - UITextField Delegate
