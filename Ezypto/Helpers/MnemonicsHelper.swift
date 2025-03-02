@@ -44,6 +44,7 @@ struct MnemonicsHelper {
     }
 }
 
+// MAEK: - Error
 enum MnemonicsHelperError: Error {
     case invalidMnemonics
 }

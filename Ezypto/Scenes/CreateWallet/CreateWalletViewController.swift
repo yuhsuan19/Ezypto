@@ -131,6 +131,13 @@ extension CreateWalletViewController {
             .subscribe(onNext: { [weak self] in
                 self?.viewModel.copyMnemonics()
             })
+
+        _ = startToUseButton.rx.tap
+            .throttle(UIConstants.buttonThrottleTime, scheduler: MainScheduler.instance)
+            .take(until: rx.deallocated)
+            .subscribe(onNext: { [weak self] in
+                self?.viewModel.createWallet()
+            })
     }
 
     private func setUpBindings() {
