@@ -20,14 +20,17 @@ final class WalletManager {
 
 // MARK: - Static functions
 extension WalletManager {
-    static func generate(mnemonics: String) throws -> WalletManager {
+    static func generate(mnemonics: String?) throws -> WalletManager {
+        guard let mnemonics, MnemonicsHelper.validate(mnemonics: mnemonics) else {
+            throw KeystoreManagerError.invalidMnemonics
+        }
         do {
             // todo: generate keystore with password
             guard let keystore = try BIP32Keystore(mnemonics: mnemonics, password: "") else {
                 throw KeystoreManagerError.failToGenerateKeystore
             }
-            print("===keystore generated===")
-            print("EVM address: \(String(describing: keystore.addresses?.first))")
+            print("===Keystore Generated===")
+            print("EVM Address: \(String(describing: keystore.addresses?.first))")
             print("========================")
             return WalletManager(keystore: keystore)
         } catch {
@@ -38,5 +41,6 @@ extension WalletManager {
 
 // MARK: - Error
 enum KeystoreManagerError: Error {
+    case invalidMnemonics
     case failToGenerateKeystore
 }

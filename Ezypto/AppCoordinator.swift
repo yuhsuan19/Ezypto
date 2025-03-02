@@ -17,7 +17,7 @@ final class AppCoordinator: Coordinator {
     }
 
     func start() {
-        routeToWelcome()
+        window.rootViewController = prepareSplashScene()
         window.makeKeyAndVisible()
     }
 }
@@ -26,6 +26,19 @@ final class AppCoordinator: Coordinator {
 extension AppCoordinator {
     private func startApp() {
         // check key store manager
+    }
+
+    private func prepareSplashScene() -> SplashViewController {
+        let viewModel = SplashViewModel()
+        let viewController = SplashViewController(viewModel: viewModel)
+        viewController.onCompleted = { [weak self] walletManager in
+            if let walletManager {
+                self?.routeToHome()
+            } else {
+                self?.routeToWelcome()
+            }
+        }
+        return viewController
     }
 }
 

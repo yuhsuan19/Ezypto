@@ -8,7 +8,13 @@
 import Foundation
 import Security
 
+protocol KeychainManagerProtocol {
+    func saveMnemonicToKeychain(mnemonic: String) throws
+    func loadMnemonicToKeychain() -> String?
+}
+
 final class KeychainManager {
+    static let atttrAccessGroup: String = "group.com.yuhsuan.ezypto"
     static let attrService: String = "ezypto.wallet"
     static let mnemonicAttrAccount: String = "user_mnemonic"
 
@@ -29,7 +35,10 @@ final class KeychainManager {
     }
 
     func loadMnemonicToKeychain() -> String? {
-        guard let data = loadData(attrService: Self.attrService, attrAccount: Self.mnemonicAttrAccount) else {
+        guard let data = loadData(
+            attrService: Self.attrService,
+            attrAccount: Self.mnemonicAttrAccount
+        ) else {
             return nil
         }
         return String(data: data, encoding: .utf8)
@@ -42,7 +51,8 @@ extension KeychainManager {
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: attrService,
             kSecAttrAccount as String: attrAccount,
-            kSecValueData as String: data
+            kSecValueData as String: data,
+            kSecAttrAccessGroup as String: Self.atttrAccessGroup
         ]
 
         SecItemDelete(query as CFDictionary)
@@ -55,7 +65,8 @@ extension KeychainManager {
             kSecAttrService as String: attrService,
             kSecAttrAccount as String: attrAccount,
             kSecReturnData as String: kCFBooleanTrue!,
-            kSecMatchLimit as String: kSecMatchLimitOne
+            kSecMatchLimit as String: kSecMatchLimitOne,
+            kSecAttrAccessGroup as String: Self.atttrAccessGroup
         ]
 
         var dataTypeRef: AnyObject?
