@@ -41,7 +41,11 @@ final class WelcomeCoordinator: Coordinator, Presentable {
 // MARK: - Routings
 extension WelcomeCoordinator {
     private func routeToCreateWallet() {
-        onRoute?(.home)
+        let coordinator = CreateWalletCoordinator(router: router)
+        addChild(coordinator)
+        router.push(coordinator, animated: true) { [weak self, weak coordinator] in
+            self?.removeChild(coordinator)
+        }
     }
 
     private func routeToImportWallet() {

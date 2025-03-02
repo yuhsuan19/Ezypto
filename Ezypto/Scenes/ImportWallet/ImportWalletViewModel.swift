@@ -12,7 +12,7 @@ import RxRelay
 final class ImportWalletViewModel {
 
     let recoveryPhrasesRelay: BehaviorRelay<[String]> = .init(value: [])
-    let isRecoveryPhraseCompleted: BehaviorRelay<Bool> = .init(value: false)
+    let isRecoveryPhraseCompletedRelay: BehaviorRelay<Bool> = .init(value: false)
     let clearTextFieldSubject: PublishSubject<Void> = .init()
 
     private let disposeBag = DisposeBag()
@@ -25,12 +25,12 @@ final class ImportWalletViewModel {
         return recoveryPhrasesRelay.value.count
     }
 
-    func recoveryPhrase(at index: Int) -> String {
-        return recoveryPhrasesRelay.value[index]
+    func displayModel(at index: Int) -> String {
+        return "\(index+1). \(recoveryPhrasesRelay.value[index])"
     }
 
     func add(phrase: String?) {
-        guard let phrase else {
+        guard let phrase, !isRecoveryPhraseCompletedRelay.value else {  
             return
         }
         let trimmed = phrase.lowercased().filter { $0.isLetter }
@@ -52,6 +52,6 @@ extension ImportWalletViewModel {
     }
 
     private func checkRecoveryPhraseCompleted() {
-        isRecoveryPhraseCompleted.accept(recoveryPhrasesRelay.value.count == 12)
+        isRecoveryPhraseCompletedRelay.accept(recoveryPhrasesRelay.value.count == 12)
     }
 }
