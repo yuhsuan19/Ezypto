@@ -11,6 +11,8 @@ import RxCocoa
 
 final class CreateWalletViewController: UIViewController {
 
+    var onRoute: ((Route) -> Void)?
+
     private lazy var backButton: UIButton = BackButton()
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
@@ -40,6 +42,25 @@ final class CreateWalletViewController: UIViewController {
         return collectionView
     }()
 
+    private lazy var copyRecoveryPhrasesButton: UIButton = {
+        let button = ActionButton(style: .plain, title: "Copy your recovery phrases")
+        return button
+    }()
+
+    private lazy var startToUseButton: UIButton = {
+        let button = ActionButton(style: .full, title: "Start to use")
+        return button
+    }()
+
+    private lazy var buttonVStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [copyRecoveryPhrasesButton, startToUseButton])
+        stackView.axis = .vertical
+        stackView.alignment = .fill
+        stackView.distribution = .fill
+        stackView.spacing = 8
+        return stackView
+    }()
+
     private let viewModel: CreateWalletViewModel
 
     init(viewModel: CreateWalletViewModel) {
@@ -57,7 +78,6 @@ final class CreateWalletViewController: UIViewController {
         setUpViewBindings()
         setUpBindings()
     }
-
 }
 
 // MARK: - Private functions
@@ -83,15 +103,35 @@ extension CreateWalletViewController {
             $0.top.equalTo(titleLabel.snp.bottom).offset(16)
         }
 
+        view.addSubview(buttonVStackView)
+        buttonVStackView.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(34)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(36)
+        }
+
         view.addSubview(collectionView)
         collectionView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(34)
             $0.top.equalTo(descLabel.snp.bottom).offset(24)
-            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(40)
+            $0.bottom.equalTo(buttonVStackView.snp.top).offset(-40)
         }
     }
 
-    private func setUpViewBindings() {}
+    private func setUpViewBindings() {
+        _ = backButton.rx.tap
+            .throttle(UIConstants.buttonThrottleTime, scheduler: MainScheduler.instance)
+            .take(until: rx.deallocated)
+            .subscribe(onNext: { [weak self] in
+                self?.onRoute?(.back)
+            })
+
+        _ = copyRecoveryPhrasesButton.rx.tap
+            .throttle(UIConstants.buttonThrottleTime, scheduler: MainScheduler.instance)
+            .take(until: rx.deallocated)
+            .subscribe(onNext: { [weak self] in
+                self?.viewModel.copyMnemonics()
+            })
+    }
 
     private func setUpBindings() {
         _ = viewModel.recoveryPhrasesRelay

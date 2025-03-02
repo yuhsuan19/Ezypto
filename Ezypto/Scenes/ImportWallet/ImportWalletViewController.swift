@@ -22,6 +22,15 @@ final class ImportWalletViewController: UIViewController {
         return label
     }()
 
+    private lazy var doneButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Done", for: .normal)
+        button.setTitleColor(AppColor.darkSub, for: .normal)
+        button.setTitleColor(AppColor.lightSub, for: .disabled)
+        button.isEnabled = false
+        return button
+    }()
+
     private lazy var descLabel: UILabel = {
         let label = UILabel()
         label.text = "Type your 12-word recovery phrase to restore your wallet"
@@ -87,6 +96,12 @@ extension ImportWalletViewController {
             $0.centerY.equalTo(titleLabel)
         }
 
+        view.addSubview(doneButton)
+        doneButton.snp.makeConstraints {
+            $0.trailing.equalTo(view.safeAreaLayoutGuide).inset(20)
+            $0.centerY.equalTo(titleLabel)
+        }
+
         view.addSubview(descLabel)
         descLabel.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(34)
@@ -104,7 +119,7 @@ extension ImportWalletViewController {
         collectionView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(34)
             $0.top.equalTo(textField.snp.bottom).offset(24)
-            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(40)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(40)
         }
     }
 
@@ -129,10 +144,12 @@ extension ImportWalletViewController {
             .take(until: rx.deallocated)
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] isCompleted in
+                guard let self else { return }
+                doneButton.isEnabled = isCompleted
                 if isCompleted {
-                    self?.textField.resignFirstResponder()
+                    textField.resignFirstResponder()
                 } else {
-                    self?.textField.becomeFirstResponder()
+                    textField.becomeFirstResponder()
                 }
             })
 

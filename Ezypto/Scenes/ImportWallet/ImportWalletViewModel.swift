@@ -30,13 +30,15 @@ final class ImportWalletViewModel {
     }
 
     func add(phrase: String?) {
-        guard let phrase, !isRecoveryPhraseCompletedRelay.value else {  
+        guard let phrase, !isRecoveryPhraseCompletedRelay.value else {
             return
         }
+
         let trimmed = phrase.lowercased().filter { $0.isLetter }
-        guard !trimmed.isEmpty else {
+        guard !trimmed.isEmpty && !recoveryPhrasesRelay.value.contains(trimmed) else {
             return
         }
+
         recoveryPhrasesRelay.accept(recoveryPhrasesRelay.value + [trimmed])
         clearTextFieldSubject.onNext(())
     }
@@ -52,6 +54,6 @@ extension ImportWalletViewModel {
     }
 
     private func checkRecoveryPhraseCompleted() {
-        isRecoveryPhraseCompletedRelay.accept(recoveryPhrasesRelay.value.count == 12)
+        isRecoveryPhraseCompletedRelay.accept(MnemonicsHelper.validate(phrases: recoveryPhrasesRelay.value))
     }
 }

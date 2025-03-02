@@ -14,6 +14,12 @@ final class CreateWalletCoordinator: Coordinator, Presentable {
     private lazy var createWalletViewController: UIViewController = {
         let viewModel = CreateWalletViewModel()
         let viewController = CreateWalletViewController(viewModel: viewModel)
+        viewController.onRoute = { [weak self] route in
+            switch route {
+            case .back:
+                self?.router.popModule(animated: true)
+            }
+        }
         return viewController
     }()
 

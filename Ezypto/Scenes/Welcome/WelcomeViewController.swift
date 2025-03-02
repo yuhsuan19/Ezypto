@@ -79,7 +79,7 @@ extension WelcomeViewController {
         view.addSubview(buttonVStackView)
         buttonVStackView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(34)
-            $0.bottom.equalToSuperview().offset(-60)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(36)
         }
     }
 
