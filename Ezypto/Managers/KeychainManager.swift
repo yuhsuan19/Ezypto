@@ -11,9 +11,10 @@ import Security
 protocol KeychainManagerProtocol {
     func saveMnemonicToKeychain(mnemonic: String) throws
     func loadMnemonicToKeychain() -> String?
+    func deleteMnemonicFromKeychain() throws
 }
 
-final class KeychainManager {
+final class KeychainManager: KeychainManagerProtocol {
     static let attrService: String = "ezypto.wallet"
     static let mnemonicAttrAccount: String = "user_mnemonic"
 

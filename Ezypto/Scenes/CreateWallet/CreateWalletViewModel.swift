@@ -13,9 +13,9 @@ final class CreateWalletViewModel {
 
     let recoveryPhrasesRelay: BehaviorRelay<[String]> = .init(value: [])
 
-    private let keychainManager: KeychainManager
+    private let keychainManager: KeychainManagerProtocol
 
-    init(keychainManager: KeychainManager = KeychainManager()) {
+    init(keychainManager: KeychainManagerProtocol = KeychainManager()) {
         self.keychainManager = keychainManager
         generatePhrases()
     }

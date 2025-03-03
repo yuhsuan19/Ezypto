@@ -15,10 +15,10 @@ final class ImportWalletViewModel {
     let isRecoveryPhraseCompletedRelay: BehaviorRelay<Bool> = .init(value: false)
     let clearTextFieldSubject: PublishSubject<Void> = .init()
 
-    private let keychainManager: KeychainManager
+    private let keychainManager: KeychainManagerProtocol
     private let disposeBag = DisposeBag()
 
-    init(keychainManager: KeychainManager = KeychainManager()) {
+    init(keychainManager: KeychainManagerProtocol = KeychainManager()) {
         self.keychainManager = keychainManager
         setUpBindings()
     }
@@ -59,7 +59,7 @@ final class ImportWalletViewModel {
             let walletManager = try WalletManager.generate(mnemonics: mnemonics)
 
             print("=====")
-            print(walletManager.keystore.addresses)
+            print(walletManager.address())
         } catch {
             // todo: handle error
             print(error)

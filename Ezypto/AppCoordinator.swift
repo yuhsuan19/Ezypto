@@ -24,16 +24,12 @@ final class AppCoordinator: Coordinator {
 
 // MARK: - Private functions
 extension AppCoordinator {
-    private func startApp() {
-        // check key store manager
-    }
-
     private func prepareSplashScene() -> SplashViewController {
         let viewModel = SplashViewModel()
         let viewController = SplashViewController(viewModel: viewModel)
         viewController.onCompleted = { [weak self] walletManager in
             if let walletManager {
-                self?.routeToHome()
+                self?.routeToHome(walletManager: walletManager)
             } else {
                 self?.routeToWelcome()
             }
@@ -52,7 +48,7 @@ extension AppCoordinator {
         coordinator.onRoute = { [weak self] route in
             switch route {
             case .home:
-                self?.routeToHome()
+                break
             }
         }
         addChild(coordinator)
@@ -60,10 +56,10 @@ extension AppCoordinator {
         window.rootViewController = coordinator.toPresentable()
     }
 
-    private func routeToHome() {
+    private func routeToHome(walletManager: WalletManagerProtocol) {
         removeAllChildren()
 
-        let coordinator = HomeCoordinator()
+        let coordinator = HomeCoordinator(walletManager: walletManager)
         coordinator.start()
         addChild(coordinator)
 

@@ -10,11 +10,11 @@ import RxSwift
 
 final class SplashViewModel {
 
-    let generateWalletManagerResultSubject: PublishSubject<Result<WalletManager, Error>> = .init()
+    let generateWalletManagerResultSubject: PublishSubject<Result<WalletManagerProtocol, Error>> = .init()
 
-    private let keychainManager: KeychainManager
+    private let keychainManager: KeychainManagerProtocol
 
-    init(keychainManager: KeychainManager = KeychainManager()) {
+    init(keychainManager: KeychainManagerProtocol = KeychainManager()) {
         self.keychainManager = keychainManager
     }
 

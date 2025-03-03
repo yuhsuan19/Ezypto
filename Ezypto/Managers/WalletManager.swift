@@ -9,25 +9,39 @@ import Foundation
 import web3swift
 import Web3Core
 
-final class WalletManager {
+protocol WalletManagerProtocol {
+    func addresses() -> [EthereumAddress]?
+    func address(at index: Int) -> EthereumAddress?
+}
 
-    let keystore: BIP32Keystore
+final class WalletManager: WalletManagerProtocol {
+
+    private let keystore: BIP32Keystore
 
     init(keystore: BIP32Keystore) {
         self.keystore = keystore
     }
+
+    func addresses() -> [EthereumAddress]? {
+        return keystore.addresses
+    }
+
+    func address(at index: Int = 0) -> EthereumAddress? {
+        return keystore.addresses?[safe: index]
+    }
+
 }
 
 // MARK: - Static functions
 extension WalletManager {
     static func generate(mnemonics: String?) throws -> WalletManager {
         guard let mnemonics, MnemonicsHelper.validate(mnemonics: mnemonics) else {
-            throw KeystoreManagerError.invalidMnemonics
+            throw WalletManagerError.invalidMnemonics
         }
         do {
             // todo: generate keystore with password
             guard let keystore = try BIP32Keystore(mnemonics: mnemonics, password: "") else {
-                throw KeystoreManagerError.failToGenerateKeystore
+                throw WalletManagerError.failToGenerateKeystore
             }
             print("===Keystore Generated===")
             print("EVM Address: \(String(describing: keystore.addresses?.first))")
@@ -40,7 +54,7 @@ extension WalletManager {
 }
 
 // MARK: - Error
-enum KeystoreManagerError: Error {
+enum WalletManagerError: Error {
     case invalidMnemonics
     case failToGenerateKeystore
 }

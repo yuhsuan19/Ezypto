@@ -10,7 +10,7 @@ import RxSwift
 
 final class SplashViewController: UIViewController {
 
-    var onCompleted: ((WalletManager?) -> Void)?
+    var onCompleted: ((WalletManagerProtocol?) -> Void)?
 
     private let viewModel: SplashViewModel
 

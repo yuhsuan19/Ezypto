@@ -10,13 +10,19 @@ import UIKit
 final class HomeCoordinator: Coordinator, Presentable {
 
     private let router: NavigationRouter
+    private let walletManager: WalletManagerProtocol
 
     private lazy var homeViewController: HomeViewController = {
-        let viewController = HomeViewController()
+        let viewModel = HomeViewModel(walletManager: walletManager)
+        let viewController = HomeViewController(viewModel: viewModel)
         return viewController
     }()
 
-    init(router: NavigationRouter = NavigationRouter()) {
+    init(
+        walletManager: WalletManagerProtocol,
+        router: NavigationRouter = NavigationRouter()
+    ) {
+        self.walletManager = walletManager
         self.router = router
     }
 
