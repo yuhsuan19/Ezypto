@@ -12,7 +12,6 @@ import RxSwift
 final class HomeViewModel {
 
     let blockchainRelay: BehaviorRelay<Blockchain> = .init(value: .sepoliaEthereum) // todo: support change blockchain
-    let selectedAddressIndexRelay: BehaviorRelay<Int> = .init(value: 0) // todo: support change address
 
     private let walletManager: WalletManagerProtocol
 
@@ -21,6 +20,6 @@ final class HomeViewModel {
     }
 
     func displayedAddress() -> String? {
-        walletManager.addressStringValue(at: selectedAddressIndexRelay.value)?.truncatingMiddle()
+        walletManager.addressStringValue()?.truncatingMiddle()
     }
 }

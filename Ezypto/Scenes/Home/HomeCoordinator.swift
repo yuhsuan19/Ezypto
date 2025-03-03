@@ -15,6 +15,12 @@ final class HomeCoordinator: Coordinator, Presentable {
     private lazy var homeViewController: HomeViewController = {
         let viewModel = HomeViewModel(walletManager: walletManager)
         let viewController = HomeViewController(viewModel: viewModel)
+        viewController.onRoute = { [weak self] route in
+            switch route {
+            case let .account:
+                self?.routeToAccount()
+            }
+        }
         return viewController
     }()
 
@@ -33,4 +39,17 @@ final class HomeCoordinator: Coordinator, Presentable {
     func toPresentable() -> UIViewController {
         router.toPresentable()
     }
+}
+
+// MARK: - Routings
+extension HomeCoordinator {
+
+    private func routeToAccount() {
+        let coordinator = AccountCoordinator(walletManager: walletManager, router: router)
+        addChild(coordinator)
+        router.push(coordinator, animated: true) { [weak self, weak coordinator] in
+            self?.removeChild(coordinator)
+        }
+    }
+
 }

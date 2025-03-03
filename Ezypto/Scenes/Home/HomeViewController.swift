@@ -10,6 +10,8 @@ import RxSwift
 
 final class HomeViewController: UIViewController {
 
+    var onRoute: ((Route) -> Void)?
+
     private lazy var blockchainChip: BlockchainChipView = BlockchainChipView()
     private lazy var addressChip: AddressChipView = AddressChipView()
 
@@ -29,6 +31,8 @@ final class HomeViewController: UIViewController {
         setUpViews()
         setUpViewBindings()
         setUpBindings()
+
+        updateViews()
     }
 
 }
@@ -61,8 +65,9 @@ extension HomeViewController {
 
         _ = addressChip.tapObservable
             .take(until: rx.deallocated)
-            .subscribe(onNext: { _ in
-                print("address chip tapped")
+            .subscribe(onNext: { [weak self] _ in
+                guard let self else { return }
+                onRoute?(.account)
             })
     }
 
@@ -70,17 +75,20 @@ extension HomeViewController {
         _ = viewModel.blockchainRelay
             .observe(on: MainScheduler.instance)
             .take(until: rx.deallocated)
-            .subscribe(onNext: { [weak self] blockchain in
-                self?.blockchainChip.update(blockchain: blockchain)
-            })
-
-        _ = viewModel.selectedAddressIndexRelay
-            .observe(on: MainScheduler.instance)
-            .take(until: rx.deallocated)
             .subscribe(onNext: { [weak self] _ in
-                guard let self else { return }
-                addressChip.update(displayAddress: viewModel.displayedAddress())
+                self?.updateViews()
             })
     }
 
+    private func updateViews() {
+        blockchainChip.update(blockchain: viewModel.blockchainRelay.value)
+        addressChip.update(displayAddress: viewModel.displayedAddress())
+    }
+}
+
+//MARK: - Route
+extension HomeViewController {
+    enum Route {
+        case account
+    }
 }

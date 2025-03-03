@@ -24,6 +24,6 @@ extension BackButton {
         snp.makeConstraints {
             $0.height.width.equalTo(32)
         }
-        setImage(UIImage(named: "back"), for: .normal)
+        setImage(.back, for: .normal)
     }
 }

@@ -31,7 +31,7 @@ final class BlockchainChipView: TappableView {
     }()
 
     private lazy var dropDownImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "arrow-down"))
+        let imageView = UIImageView(image: .arrowDown)
         imageView.backgroundColor = .clear
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true

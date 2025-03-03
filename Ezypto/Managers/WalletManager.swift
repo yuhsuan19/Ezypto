@@ -15,6 +15,17 @@ protocol WalletManagerProtocol {
     func addressStringValue(at index: Int) -> String?
 }
 
+extension WalletManagerProtocol {
+    func address() -> EthereumAddress? {
+        return address(at: 0)
+    }
+
+    func addressStringValue() -> String? {
+        return addressStringValue(at: 0)
+    }
+
+}
+
 final class WalletManager: WalletManagerProtocol {
 
     private let keystore: BIP32Keystore
@@ -27,7 +38,7 @@ final class WalletManager: WalletManagerProtocol {
         return keystore.addresses
     }
 
-    func address(at index: Int = 0) -> EthereumAddress? {
+    func address(at index: Int) -> EthereumAddress? {
         return keystore.addresses?[safe: index]
     }
 

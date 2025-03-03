@@ -42,15 +42,9 @@ final class CreateWalletViewController: UIViewController {
         return collectionView
     }()
 
-    private lazy var copyRecoveryPhrasesButton: UIButton = {
-        let button = ActionButton(style: .plain, title: "Copy your recovery phrases")
-        return button
-    }()
+    private lazy var copyRecoveryPhrasesButton: UIButton = ActionButton(style: .plain, title: "Copy your recovery phrases")
 
-    private lazy var startToUseButton: UIButton = {
-        let button = ActionButton(style: .full, title: "Start to use")
-        return button
-    }()
+    private lazy var startToUseButton: UIButton = ActionButton(style: .full, title: "Start to use")
 
     private lazy var buttonVStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [copyRecoveryPhrasesButton, startToUseButton])

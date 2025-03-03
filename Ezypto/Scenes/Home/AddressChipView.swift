@@ -19,7 +19,7 @@ final class AddressChipView: TappableView {
     }()
 
     private lazy var arrowImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "arrow-right"))
+        let imageView = UIImageView(image: .arrowRight)
         imageView.backgroundColor = .clear
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true

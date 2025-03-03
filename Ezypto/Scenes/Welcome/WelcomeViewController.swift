@@ -39,15 +39,9 @@ final class WelcomeViewController: UIViewController {
         return stackView
     }()
 
-    private lazy var createNewWalletButton: UIButton = {
-        let button = ActionButton(style: .full, title: "Create a new wallet")
-        return button
-    }()
+    private lazy var createNewWalletButton: UIButton = ActionButton(style: .full, title: "Create a new wallet")
 
-    private lazy var importWalletButton: UIButton = {
-        let button = ActionButton(style: .plain, title: "Import an existing wallet")
-        return button
-    }()
+    private lazy var importWalletButton: UIButton = ActionButton(style: .plain, title: "Import an existing wallet")
 
     private lazy var buttonVStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [createNewWalletButton, importWalletButton])
