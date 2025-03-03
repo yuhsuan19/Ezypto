@@ -14,7 +14,6 @@ protocol KeychainManagerProtocol {
 }
 
 final class KeychainManager {
-    static let atttrAccessGroup: String = "group.com.yuhsuan.ezypto"
     static let attrService: String = "ezypto.wallet"
     static let mnemonicAttrAccount: String = "user_mnemonic"
 
@@ -43,6 +42,16 @@ final class KeychainManager {
         }
         return String(data: data, encoding: .utf8)
     }
+
+    func deleteMnemonicFromKeychain() throws {
+        let status = clearData(
+            attrService: Self.attrService,
+                  attrAccount: Self.mnemonicAttrAccount
+        )
+        if status != errSecSuccess {
+            throw KeychainManagerError.failToDeleteMnemonic
+        }
+    }
 }
 
 extension KeychainManager {
@@ -52,7 +61,7 @@ extension KeychainManager {
             kSecAttrService as String: attrService,
             kSecAttrAccount as String: attrAccount,
             kSecValueData as String: data,
-            kSecAttrAccessGroup as String: Self.atttrAccessGroup
+            kSecAttrAccessible as String: kSecAttrAccessibleWhenUnlockedThisDeviceOnly
         ]
 
         SecItemDelete(query as CFDictionary)
@@ -65,8 +74,7 @@ extension KeychainManager {
             kSecAttrService as String: attrService,
             kSecAttrAccount as String: attrAccount,
             kSecReturnData as String: kCFBooleanTrue!,
-            kSecMatchLimit as String: kSecMatchLimitOne,
-            kSecAttrAccessGroup as String: Self.atttrAccessGroup
+            kSecMatchLimit as String: kSecMatchLimitOne
         ]
 
         var dataTypeRef: AnyObject?
@@ -77,9 +85,19 @@ extension KeychainManager {
         }
         return dataTypeRef as? Data
     }
+
+    private func clearData(attrService: String, attrAccount: String) -> OSStatus {
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: attrService,
+            kSecAttrAccount as String: attrAccount,
+        ]
+        return SecItemDelete(query as CFDictionary)
+    }
 }
 
 // MARK: - Error
 enum KeychainManagerError: Error {
     case failToSaveMnemonic
+    case failToDeleteMnemonic
 }
