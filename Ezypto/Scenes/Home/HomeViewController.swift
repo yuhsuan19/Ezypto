@@ -11,6 +11,7 @@ import RxSwift
 final class HomeViewController: UIViewController {
 
     private lazy var blockchainChip: BlockchainChipView = BlockchainChipView()
+    private lazy var addressChip: AddressChipView = AddressChipView()
 
     private let viewModel: HomeViewModel
 
@@ -43,6 +44,12 @@ extension HomeViewController {
             $0.leading.equalToSuperview().inset(24)
             $0.top.equalTo(view.safeAreaLayoutGuide).offset(16)
         }
+
+        view.addSubview(addressChip)
+        addressChip.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.top.equalTo(blockchainChip.snp.bottom).offset(32)
+        }
     }
 
     private func setUpViewBindings() {
@@ -50,6 +57,12 @@ extension HomeViewController {
             .take(until: rx.deallocated)
             .subscribe(onNext: { _ in
                 print("todo - open blockchain picker")
+            })
+
+        _ = addressChip.tapObservable
+            .take(until: rx.deallocated)
+            .subscribe(onNext: { _ in
+                print("address chip tapped")
             })
     }
 
@@ -61,6 +74,13 @@ extension HomeViewController {
                 self?.blockchainChip.update(blockchain: blockchain)
             })
 
-
+        _ = viewModel.selectedAddressIndexRelay
+            .observe(on: MainScheduler.instance)
+            .take(until: rx.deallocated)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self else { return }
+                addressChip.update(displayAddress: viewModel.displayedAddress())
+            })
     }
+
 }

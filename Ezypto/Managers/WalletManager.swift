@@ -12,6 +12,7 @@ import Web3Core
 protocol WalletManagerProtocol {
     func addresses() -> [EthereumAddress]?
     func address(at index: Int) -> EthereumAddress?
+    func addressStringValue(at index: Int) -> String?
 }
 
 final class WalletManager: WalletManagerProtocol {
@@ -28,6 +29,10 @@ final class WalletManager: WalletManagerProtocol {
 
     func address(at index: Int = 0) -> EthereumAddress? {
         return keystore.addresses?[safe: index]
+    }
+
+    func addressStringValue(at index: Int) -> String? {
+        return keystore.addresses?[safe: index]?.address
     }
 
 }

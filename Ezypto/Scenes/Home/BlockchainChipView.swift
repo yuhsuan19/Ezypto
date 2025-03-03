@@ -13,11 +13,7 @@ fileprivate enum UX {
     static let height: CGFloat = 30
 }
 
-final class BlockchainChipView: UIView {
-
-    var tapObservable: Observable<UITapGestureRecognizer> {
-        return tapGesture.rx.event.asObservable()
-    }
+final class BlockchainChipView: TappableView {
 
     private lazy var logoImageView: UIImageView = {
         let imageView = UIImageView()
@@ -53,26 +49,14 @@ final class BlockchainChipView: UIView {
         return stackView
     }()
 
-    private let tapGesture = UITapGestureRecognizer()
-
-    init() {
-        super.init(frame: .zero)
-        setUpViews()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
     func update(blockchain: Blockchain) {
         logoImageView.image = UIImage(named: blockchain.logoImageName)
         nameLabel.text = blockchain.displayName
     }
-}
 
-// MARK: - Private functions
-extension BlockchainChipView {
-    private func setUpViews() {
+    override func setUpViews() {
+        super.setUpViews()
+        
         snp.makeConstraints {
             $0.height.equalTo(UX.height)
         }
@@ -94,8 +78,5 @@ extension BlockchainChipView {
             $0.centerY.equalToSuperview()
             $0.leading.trailing.equalToSuperview().inset(12)
         }
-
-        isUserInteractionEnabled = true
-        addGestureRecognizer(tapGesture)
     }
 }
