@@ -45,7 +45,7 @@ protocol WalletManagerPrepareProtocol {
 extension WalletManagerPrepareProtocol {
     func prepareWallet() {
         do {
-            let mnemonic = keychainManager.loadMnemonicToKeychain()
+            let mnemonic = keychainManager.loadMnemonicsFromKeychain()
             let walletManager = try WalletManager.generate(mnemonics: mnemonic)
             generateWalletManagerResultSubject.onNext(.success(walletManager))
         } catch {

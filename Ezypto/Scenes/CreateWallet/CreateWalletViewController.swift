@@ -12,7 +12,6 @@ import RxCocoa
 final class CreateWalletViewController: UIViewController, WalletManagerPrepareViewControllerProtocol {
 
     var onCompleted: (((any WalletManagerProtocol)?) -> Void)?
-
     var onRoute: ((Route) -> Void)?
 
     private lazy var backButton: UIButton = BackButton()

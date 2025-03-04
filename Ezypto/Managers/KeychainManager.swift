@@ -9,9 +9,9 @@ import Foundation
 import Security
 
 protocol KeychainManagerProtocol {
-    func saveMnemonicToKeychain(mnemonic: String) throws
-    func loadMnemonicToKeychain() -> String?
-    func deleteMnemonicFromKeychain() throws
+    func saveMnemonicsToKeychain(mnemonic: String) throws
+    func loadMnemonicsFromKeychain() -> String?
+    func deleteMnemonicsFromKeychain() throws
 }
 
 final class KeychainManager: KeychainManagerProtocol {
@@ -19,7 +19,7 @@ final class KeychainManager: KeychainManagerProtocol {
     static let mnemonicAttrAccount: String = "user_mnemonic"
 
     // todo: encrypt(AES) with user password before saving
-    func saveMnemonicToKeychain(mnemonic: String) throws {
+    func saveMnemonicsToKeychain(mnemonic: String) throws {
         guard let mnemonicData = mnemonic.data(using: .utf8) else {
             throw KeychainManagerError.failToSaveMnemonic
         }
@@ -34,7 +34,7 @@ final class KeychainManager: KeychainManagerProtocol {
         }
     }
 
-    func loadMnemonicToKeychain() -> String? {
+    func loadMnemonicsFromKeychain() -> String? {
         guard let data = loadData(
             attrService: Self.attrService,
             attrAccount: Self.mnemonicAttrAccount
@@ -44,7 +44,7 @@ final class KeychainManager: KeychainManagerProtocol {
         return String(data: data, encoding: .utf8)
     }
 
-    func deleteMnemonicFromKeychain() throws {
+    func deleteMnemonicsFromKeychain() throws {
         let status = clearData(
             attrService: Self.attrService,
             attrAccount: Self.mnemonicAttrAccount

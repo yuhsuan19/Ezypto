@@ -42,7 +42,7 @@ final class CreateWalletViewModel: WalletManagerPrepareProtocol {
     func createWallet() {
         do {
             let mnemonics = try MnemonicsHelper.join(phrases: recoveryPhrasesRelay.value)
-            try keychainManager.saveMnemonicToKeychain(mnemonic: mnemonics)
+            try keychainManager.saveMnemonicsToKeychain(mnemonic: mnemonics)
 
             prepareWallet()
         } catch {
