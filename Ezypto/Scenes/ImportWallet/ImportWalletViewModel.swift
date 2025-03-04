@@ -11,7 +11,7 @@ import RxRelay
 
 final class ImportWalletViewModel: WalletManagerPrepareProtocol {
 
-    let generateWalletManagerResultSubject: RxSwift.PublishSubject<Result<any WalletManagerProtocol, any Error>> = .init()
+    let generateWalletManagerResultSubject: PublishSubject<Result<WalletManagerProtocol, Error>> = .init()
     let recoveryPhrasesRelay: BehaviorRelay<[String]> = .init(value: [])
     let isRecoveryPhraseCompletedRelay: BehaviorRelay<Bool> = .init(value: false)
     let clearTextFieldSubject: PublishSubject<Void> = .init()
@@ -67,6 +67,7 @@ final class ImportWalletViewModel: WalletManagerPrepareProtocol {
     }
 }
 
+// MARK: - Private functions
 extension ImportWalletViewModel {
 
     private func setUpBindings() {

@@ -34,16 +34,17 @@ final class HomeViewModel {
         setUpBindings()
     }
 
-    func loadData() {
-
-    }
-
     func displayedAddress() -> String? {
         walletManager.addressStringValue()?.truncatingMiddle()
     }
 
     func nativeTokenSymbol() -> String {
         blockchainRelay.value.nativeTokenSymbol
+    }
+
+    func sendETHToShane() {
+        let shaneAddr = EthereumAddress("0xBAeDaE6Dd72AdDf64AfE201cE9e7a4A28F0c5ce9")!
+        sendNativeToken(to: shaneAddr, value: BigUInt.init("0.001", .ether)!)
     }
 }
 
@@ -95,6 +96,19 @@ extension HomeViewModel {
                 print("Native token balance fetched: \(formatted)")
             } catch {
                 nativeBalanceRelay.accept("-.-")
+            }
+        }
+    }
+
+    private func sendNativeToken(to: EthereumAddress, value: BigUInt) {
+        guard let address = walletManager.address() else { return }
+        Task {
+            do {
+                let txHash = try await blockchainInteractionProvider.sendNativeToken(from: address, to: to, value: value)
+                print("Native token sent, tx hash: \(txHash)")
+            } catch {
+                // todo: error handle
+                print(error)
             }
         }
     }

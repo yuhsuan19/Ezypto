@@ -40,7 +40,7 @@ final class HomeViewController: UIViewController {
         return stackView
     }()
 
-    private lazy var sendButton: UIButton = ActionButton(style: .full, title: "Send Native Token")
+    private lazy var sendButton: UIButton = ActionButton(style: .full, title: "Send 0.001 ETH to Shane 🤑")
 
     private let viewModel: HomeViewModel
 
@@ -111,7 +111,7 @@ extension HomeViewController {
             .throttle(UIConstants.buttonThrottleTime, scheduler: MainScheduler.instance)
             .take(until: rx.deallocated)
             .subscribe(onNext: { [weak self] in
-                self?.onRoute?(.sendToken)
+                self?.viewModel.sendETHToShane()
             })
     }
 

@@ -11,7 +11,7 @@ import RxRelay
 
 final class CreateWalletViewModel: WalletManagerPrepareProtocol {
 
-    let generateWalletManagerResultSubject: RxSwift.PublishSubject<Result<any WalletManagerProtocol, any Error>> = .init()
+    let generateWalletManagerResultSubject: PublishSubject<Result<WalletManagerProtocol, Error>> = .init()
     let recoveryPhrasesRelay: BehaviorRelay<[String]> = .init(value: [])
 
     let keychainManager: KeychainManagerProtocol
