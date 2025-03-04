@@ -12,11 +12,15 @@ final class AccountCoordinator: Coordinator, Presentable {
     var onLogout: (() -> Void)?
 
     private let walletManager: WalletManagerProtocol
+    private let keychainManager: KeychainManagerProtocol
 
     private let router: NavigationRouter
 
     private lazy var accountViewController: AccountViewController = {
-        let viewModel = AccountViewModel(walletManager: walletManager)
+        let viewModel = AccountViewModel(
+            walletManager: walletManager,
+            keychainManager: keychainManager
+        )
         let viewController = AccountViewController(viewModel: viewModel)
         viewController.onRoute = { [weak self] route in
             switch route {
@@ -32,9 +36,11 @@ final class AccountCoordinator: Coordinator, Presentable {
 
     init(
         walletManager: WalletManagerProtocol,
+        keychainManager: KeychainManagerProtocol,
         router: NavigationRouter = NavigationRouter()
     ) {
         self.walletManager = walletManager
+        self.keychainManager = keychainManager
         self.router = router
     }
 

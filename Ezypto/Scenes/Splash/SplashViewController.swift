@@ -71,14 +71,14 @@ extension SplashViewController {
     }
 
     private func setUpBindings() {
-        viewModel.generateWalletManagerResultSubject
+        _ = viewModel.generateWalletManagerResultSubject
             .observe(on: MainScheduler.instance)
             .take(until: rx.deallocated)
             .subscribe(onNext: { [weak self] result in
                 switch result {
                 case let .success(walletManger):
                     self?.onCompleted?(walletManger)
-                case let .failure(error):
+                case .failure:
                     self?.onCompleted?(nil)
                 }
             })

@@ -10,9 +10,14 @@ import UIKit
 final class AppCoordinator: Coordinator {
 
     private let window: UIWindow
+    private let keychainManager: KeychainManagerProtocol
 
-    init(window: UIWindow) {
+    init(
+        window: UIWindow,
+        keychainManager: KeychainManagerProtocol = KeychainManager()
+    ) {
         self.window = window
+        self.keychainManager = keychainManager
         super.init()
     }
 
@@ -25,7 +30,7 @@ final class AppCoordinator: Coordinator {
 // MARK: - Private functions
 extension AppCoordinator {
     private func prepareSplashScene() -> SplashViewController {
-        let viewModel = SplashViewModel()
+        let viewModel = SplashViewModel(keychainManager: keychainManager)
         let viewController = SplashViewController(viewModel: viewModel)
         viewController.onCompleted = { [weak self] walletManager in
             if let walletManager {
@@ -43,7 +48,7 @@ extension AppCoordinator {
     private func routeToWelcome() {
         removeAllChildren()
 
-        let coordinator = WelcomeCoordinator()
+        let coordinator = WelcomeCoordinator(keychainManager: keychainManager)
         coordinator.start()
         coordinator.onRoute = { [weak self] route in
             switch route {
@@ -59,7 +64,13 @@ extension AppCoordinator {
     private func routeToHome(walletManager: WalletManagerProtocol) {
         removeAllChildren()
 
-        let coordinator = HomeCoordinator(walletManager: walletManager)
+        let coordinator = HomeCoordinator(
+            walletManager: walletManager,
+            keychainManager: keychainManager
+        )
+        coordinator.onLogout = { [weak self] in
+            self?.routeToWelcome()
+        }
         coordinator.start()
         addChild(coordinator)
 

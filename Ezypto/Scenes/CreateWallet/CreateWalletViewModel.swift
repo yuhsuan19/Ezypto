@@ -15,7 +15,7 @@ final class CreateWalletViewModel {
 
     private let keychainManager: KeychainManagerProtocol
 
-    init(keychainManager: KeychainManagerProtocol = KeychainManager()) {
+    init(keychainManager: KeychainManagerProtocol) {
         self.keychainManager = keychainManager
         generatePhrases()
     }

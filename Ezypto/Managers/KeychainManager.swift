@@ -47,7 +47,7 @@ final class KeychainManager: KeychainManagerProtocol {
     func deleteMnemonicFromKeychain() throws {
         let status = clearData(
             attrService: Self.attrService,
-                  attrAccount: Self.mnemonicAttrAccount
+            attrAccount: Self.mnemonicAttrAccount
         )
         if status != errSecSuccess {
             throw KeychainManagerError.failToDeleteMnemonic

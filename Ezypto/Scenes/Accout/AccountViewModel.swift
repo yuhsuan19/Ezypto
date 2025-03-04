@@ -6,12 +6,21 @@
 //
 
 import UIKit
+import RxSwift
 
 final class AccountViewModel {
-    private let walletManager: WalletManagerProtocol
 
-    init(walletManager: WalletManagerProtocol) {
+    let walletRemovedSubject: PublishSubject<Void> = .init()
+
+    private let walletManager: WalletManagerProtocol
+    private let keychainManager: KeychainManagerProtocol
+
+    init(
+        walletManager: WalletManagerProtocol,
+        keychainManager: KeychainManagerProtocol
+    ) {
         self.walletManager = walletManager
+        self.keychainManager = keychainManager
     }
 
     func displayedAddress() -> String? {
@@ -23,5 +32,12 @@ final class AccountViewModel {
     }
 
     func removeWallet() {
+        do {
+            try keychainManager.deleteMnemonicFromKeychain()
+            walletRemovedSubject.onNext(())
+        } catch {
+            // todo: error handle
+            print(error)
+        }
     }
 }

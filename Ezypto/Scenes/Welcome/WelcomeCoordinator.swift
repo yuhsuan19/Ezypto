@@ -11,7 +11,9 @@ final class WelcomeCoordinator: Coordinator, Presentable {
 
     var onRoute: ((Route) -> Void)?
 
+    private let keychainManager: KeychainManagerProtocol
     private let router: NavigationRouter
+
     private lazy var welcomeViewController: WelcomeViewController = {
         let viewController = WelcomeViewController()
         viewController.onRoute = { [weak self] route in
@@ -25,7 +27,11 @@ final class WelcomeCoordinator: Coordinator, Presentable {
         return viewController
     }()
 
-    init(router: NavigationRouter = NavigationRouter()) {
+    init(
+        keychainManager: KeychainManagerProtocol,
+        router: NavigationRouter = NavigationRouter()
+    ) {
+        self.keychainManager = keychainManager
         self.router = router
     }
 
@@ -41,7 +47,10 @@ final class WelcomeCoordinator: Coordinator, Presentable {
 // MARK: - Routings
 extension WelcomeCoordinator {
     private func routeToCreateWallet() {
-        let coordinator = CreateWalletCoordinator(router: router)
+        let coordinator = CreateWalletCoordinator(
+            keychainManager: keychainManager,
+            router: router
+        )
         addChild(coordinator)
         router.push(coordinator, animated: true) { [weak self, weak coordinator] in
             self?.removeChild(coordinator)
@@ -49,7 +58,10 @@ extension WelcomeCoordinator {
     }
 
     private func routeToImportWallet() {
-        let coordinator = ImportWalletCoordinator(router: router)
+        let coordinator = ImportWalletCoordinator(
+            keychainManager: keychainManager,
+            router: router
+        )
         addChild(coordinator)
         router.push(coordinator, animated: true) { [weak self, weak coordinator] in
             self?.removeChild(coordinator)

@@ -18,7 +18,7 @@ final class ImportWalletViewModel {
     private let keychainManager: KeychainManagerProtocol
     private let disposeBag = DisposeBag()
 
-    init(keychainManager: KeychainManagerProtocol = KeychainManager()) {
+    init(keychainManager: KeychainManagerProtocol) {
         self.keychainManager = keychainManager
         setUpBindings()
     }

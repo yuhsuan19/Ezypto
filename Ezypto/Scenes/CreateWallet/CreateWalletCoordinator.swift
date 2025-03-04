@@ -9,10 +9,12 @@ import UIKit
 
 final class CreateWalletCoordinator: Coordinator, Presentable {
 
+    private let keychainManager: KeychainManagerProtocol
+
     private let router: NavigationRouter
 
     private lazy var createWalletViewController: UIViewController = {
-        let viewModel = CreateWalletViewModel()
+        let viewModel = CreateWalletViewModel(keychainManager: keychainManager)
         let viewController = CreateWalletViewController(viewModel: viewModel)
         viewController.onRoute = { [weak self] route in
             switch route {
@@ -23,7 +25,11 @@ final class CreateWalletCoordinator: Coordinator, Presentable {
         return viewController
     }()
 
-    init(router: NavigationRouter) {
+    init(
+        keychainManager: KeychainManagerProtocol,
+        router: NavigationRouter
+    ) {
+        self.keychainManager = keychainManager
         self.router = router
     }
 

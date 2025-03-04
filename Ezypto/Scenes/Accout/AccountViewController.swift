@@ -114,7 +114,12 @@ extension AccountViewController {
     }
 
     private func setUpBindings() {
-
+        _ = viewModel.walletRemovedSubject
+            .take(until: rx.deallocated)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] _ in
+                self?.onLogout?()
+            })
     }
 
     private func updateViews() {

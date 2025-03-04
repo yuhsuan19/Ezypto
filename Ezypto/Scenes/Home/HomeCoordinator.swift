@@ -13,6 +13,7 @@ final class HomeCoordinator: Coordinator, Presentable {
 
     private let router: NavigationRouter
     private let walletManager: WalletManagerProtocol
+    private let keychainManager: KeychainManagerProtocol
 
     private lazy var homeViewController: HomeViewController = {
         let viewModel = HomeViewModel(walletManager: walletManager)
@@ -31,9 +32,11 @@ final class HomeCoordinator: Coordinator, Presentable {
 
     init(
         walletManager: WalletManagerProtocol,
+        keychainManager: KeychainManagerProtocol,
         router: NavigationRouter = NavigationRouter()
     ) {
         self.walletManager = walletManager
+        self.keychainManager = keychainManager
         self.router = router
     }
 
@@ -50,7 +53,14 @@ final class HomeCoordinator: Coordinator, Presentable {
 extension HomeCoordinator {
 
     private func routeToAccount() {
-        let coordinator = AccountCoordinator(walletManager: walletManager, router: router)
+        let coordinator = AccountCoordinator(
+            walletManager: walletManager,
+            keychainManager: keychainManager,
+            router: router
+        )
+        coordinator.onLogout = { [weak self] in
+            self?.onLogout?()
+        }
         addChild(coordinator)
         router.push(coordinator, animated: true) { [weak self, weak coordinator] in
             self?.removeChild(coordinator)
