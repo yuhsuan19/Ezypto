@@ -40,6 +40,8 @@ final class HomeViewController: UIViewController {
         return stackView
     }()
 
+    private lazy var sendButton: UIButton = ActionButton(style: .full, title: "Send Native Token")
+
     private let viewModel: HomeViewModel
 
     init(viewModel: HomeViewModel) {
@@ -83,6 +85,12 @@ extension HomeViewController {
             $0.leading.trailing.equalToSuperview().inset(34)
             $0.top.equalTo(addressChip.snp.bottom).offset(24)
         }
+
+        view.addSubview(sendButton)
+        sendButton.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(34)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(36)
+        }
     }
 
     private func setUpViewBindings() {
@@ -97,6 +105,13 @@ extension HomeViewController {
             .subscribe(onNext: { [weak self] _ in
                 guard let self else { return }
                 onRoute?(.account)
+            })
+
+        _ = sendButton.rx.tap
+            .throttle(UIConstants.buttonThrottleTime, scheduler: MainScheduler.instance)
+            .take(until: rx.deallocated)
+            .subscribe(onNext: { [weak self] in
+                self?.onRoute?(.sendToken)
             })
     }
 
