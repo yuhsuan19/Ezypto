@@ -9,11 +9,12 @@ import UIKit
 import RxSwift
 import RxRelay
 
-final class CreateWalletViewModel {
+final class CreateWalletViewModel: WalletManagerPrepareProtocol {
 
+    let generateWalletManagerResultSubject: RxSwift.PublishSubject<Result<any WalletManagerProtocol, any Error>> = .init()
     let recoveryPhrasesRelay: BehaviorRelay<[String]> = .init(value: [])
 
-    private let keychainManager: KeychainManagerProtocol
+    let keychainManager: KeychainManagerProtocol
 
     init(keychainManager: KeychainManagerProtocol) {
         self.keychainManager = keychainManager
@@ -43,8 +44,7 @@ final class CreateWalletViewModel {
             let mnemonics = try MnemonicsHelper.join(phrases: recoveryPhrasesRelay.value)
             try keychainManager.saveMnemonicToKeychain(mnemonic: mnemonics)
 
-            print("=====")
-            print(keychainManager.loadMnemonicToKeychain())
+            prepareWallet()
         } catch {
             // todo: handle error
             print(error)

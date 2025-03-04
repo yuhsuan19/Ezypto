@@ -9,13 +9,15 @@ import Foundation
 import RxSwift
 import RxRelay
 
-final class ImportWalletViewModel {
+final class ImportWalletViewModel: WalletManagerPrepareProtocol {
 
+    let generateWalletManagerResultSubject: RxSwift.PublishSubject<Result<any WalletManagerProtocol, any Error>> = .init()
     let recoveryPhrasesRelay: BehaviorRelay<[String]> = .init(value: [])
     let isRecoveryPhraseCompletedRelay: BehaviorRelay<Bool> = .init(value: false)
     let clearTextFieldSubject: PublishSubject<Void> = .init()
 
-    private let keychainManager: KeychainManagerProtocol
+    let keychainManager: KeychainManagerProtocol
+
     private let disposeBag = DisposeBag()
 
     init(keychainManager: KeychainManagerProtocol) {
@@ -56,7 +58,8 @@ final class ImportWalletViewModel {
         do {
             let mnemonics = try MnemonicsHelper.join(phrases: recoveryPhrasesRelay.value)
             try keychainManager.saveMnemonicToKeychain(mnemonic: mnemonics)
-            let walletManager = try WalletManager.generate(mnemonics: mnemonics)
+
+            prepareWallet()
         } catch {
             // todo: handle error
             print(error)

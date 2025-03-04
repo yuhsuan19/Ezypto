@@ -9,8 +9,9 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-final class ImportWalletViewController: UIViewController {
+final class ImportWalletViewController: UIViewController, WalletManagerPrepareViewControllerProtocol {
 
+    var onCompleted: (((any WalletManagerProtocol)?) -> Void)?
     var onRoute: ((Route) -> Void)?
 
     private lazy var backButton: UIButton = BackButton()
@@ -60,7 +61,7 @@ final class ImportWalletViewController: UIViewController {
         return collectionView
     }()
 
-    private let viewModel: ImportWalletViewModel
+    let viewModel: ImportWalletViewModel
 
     init(viewModel: ImportWalletViewModel) {
         self.viewModel = viewModel
@@ -140,6 +141,8 @@ extension ImportWalletViewController {
     }
 
     private func setUpBindings() {
+        setUpWalletManagerGeneratingBindings()
+        
         _ = viewModel.recoveryPhrasesRelay
             .take(until: rx.deallocated)
             .observe(on: MainScheduler.instance)

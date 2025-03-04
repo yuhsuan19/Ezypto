@@ -8,11 +8,12 @@
 import UIKit
 import RxSwift
 
-final class SplashViewController: UIViewController {
+
+final class SplashViewController: UIViewController, WalletManagerPrepareViewControllerProtocol {
 
     var onCompleted: ((WalletManagerProtocol?) -> Void)?
 
-    private let viewModel: SplashViewModel
+    let viewModel: SplashViewModel
 
     private lazy var appNameLabel: UILabel = {
         let label = UILabel()
@@ -71,16 +72,6 @@ extension SplashViewController {
     }
 
     private func setUpBindings() {
-        _ = viewModel.generateWalletManagerResultSubject
-            .observe(on: MainScheduler.instance)
-            .take(until: rx.deallocated)
-            .subscribe(onNext: { [weak self] result in
-                switch result {
-                case let .success(walletManger):
-                    self?.onCompleted?(walletManger)
-                case .failure:
-                    self?.onCompleted?(nil)
-                }
-            })
+        setUpWalletManagerGeneratingBindings()
     }
 }

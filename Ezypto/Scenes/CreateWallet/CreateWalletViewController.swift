@@ -9,7 +9,9 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-final class CreateWalletViewController: UIViewController {
+final class CreateWalletViewController: UIViewController, WalletManagerPrepareViewControllerProtocol {
+
+    var onCompleted: (((any WalletManagerProtocol)?) -> Void)?
 
     var onRoute: ((Route) -> Void)?
 
@@ -55,7 +57,7 @@ final class CreateWalletViewController: UIViewController {
         return stackView
     }()
 
-    private let viewModel: CreateWalletViewModel
+    let viewModel: CreateWalletViewModel
 
     init(viewModel: CreateWalletViewModel) {
         self.viewModel = viewModel
@@ -112,6 +114,8 @@ extension CreateWalletViewController {
     }
 
     private func setUpViewBindings() {
+        setUpWalletManagerGeneratingBindings()
+
         _ = backButton.rx.tap
             .throttle(UIConstants.buttonThrottleTime, scheduler: MainScheduler.instance)
             .take(until: rx.deallocated)

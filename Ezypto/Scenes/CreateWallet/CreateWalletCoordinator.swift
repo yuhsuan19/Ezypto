@@ -9,6 +9,8 @@ import UIKit
 
 final class CreateWalletCoordinator: Coordinator, Presentable {
 
+    var onCompleted: ((WalletManagerProtocol?) -> Void)?
+
     private let keychainManager: KeychainManagerProtocol
 
     private let router: NavigationRouter
@@ -16,6 +18,9 @@ final class CreateWalletCoordinator: Coordinator, Presentable {
     private lazy var createWalletViewController: UIViewController = {
         let viewModel = CreateWalletViewModel(keychainManager: keychainManager)
         let viewController = CreateWalletViewController(viewModel: viewModel)
+        viewController.onCompleted = { [weak self] walletManager in
+            self?.onCompleted?(walletManager)
+        }
         viewController.onRoute = { [weak self] route in
             switch route {
             case .back:

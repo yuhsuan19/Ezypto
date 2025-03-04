@@ -49,13 +49,14 @@ extension AppCoordinator {
         removeAllChildren()
 
         let coordinator = WelcomeCoordinator(keychainManager: keychainManager)
-        coordinator.start()
         coordinator.onRoute = { [weak self] route in
             switch route {
-            case .home:
-                break
+            case let .home(walletManager):
+                self?.routeToHome(walletManager: walletManager)
             }
         }
+
+        coordinator.start()
         addChild(coordinator)
 
         window.rootViewController = coordinator.toPresentable()
@@ -71,6 +72,7 @@ extension AppCoordinator {
         coordinator.onLogout = { [weak self] in
             self?.routeToWelcome()
         }
+        
         coordinator.start()
         addChild(coordinator)
 

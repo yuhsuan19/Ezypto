@@ -51,6 +51,11 @@ extension WelcomeCoordinator {
             keychainManager: keychainManager,
             router: router
         )
+        coordinator.onCompleted = { [weak self] walletManager in
+            if let walletManager {
+                self?.onRoute?(.home(walletManager: walletManager))
+            }
+        }
         addChild(coordinator)
         router.push(coordinator, animated: true) { [weak self, weak coordinator] in
             self?.removeChild(coordinator)
@@ -62,6 +67,11 @@ extension WelcomeCoordinator {
             keychainManager: keychainManager,
             router: router
         )
+        coordinator.onCompleted = { [weak self] walletManager in
+            if let walletManager {
+                self?.onRoute?(.home(walletManager: walletManager))
+            }
+        }
         addChild(coordinator)
         router.push(coordinator, animated: true) { [weak self, weak coordinator] in
             self?.removeChild(coordinator)
@@ -73,6 +83,6 @@ extension WelcomeCoordinator {
 // MARK: - Route
 extension WelcomeCoordinator {
     enum Route {
-        case home
+        case home(walletManager: WalletManagerProtocol)
     }
 }
