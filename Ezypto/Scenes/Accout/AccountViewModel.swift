@@ -54,8 +54,11 @@ final class AccountViewModel {
         return recoveryPhrasesRelay.value.count
     }
 
-    func displayModel(at index: Int) -> String {
-        return "\(index+1). \(recoveryPhrasesRelay.value[index])"
+    func displayModel(at index: Int) -> String? {
+        guard let phrase = recoveryPhrasesRelay.value[safe: index] else {
+            return nil
+        }
+        return "\(index+1). \(phrase)"
     }
 }
 

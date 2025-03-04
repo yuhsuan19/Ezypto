@@ -33,7 +33,7 @@ final class PhraseCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func update(phrase: String) {
+    func update(phrase: String?) {
         phraseLabel.text = phrase
     }
 }

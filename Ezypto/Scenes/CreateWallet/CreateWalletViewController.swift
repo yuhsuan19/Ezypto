@@ -150,7 +150,7 @@ extension CreateWalletViewController {
 // MARK: - UICollectionView Delegate & DataSource
 extension CreateWalletViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let text = viewModel.displayModel(at: indexPath.item)
+        let text = viewModel.displayModel(at: indexPath.item) ?? ""
         let font = PhraseCollectionViewCellUX.font
         let width = text.widthOf(font)
 
