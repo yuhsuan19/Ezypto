@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import BigInt
 
 extension String {
     func widthOf(_ font: UIFont) -> CGFloat {

@@ -15,11 +15,13 @@ import BigInt
 final class HomeViewModel {
 
     let blockchainRelay: BehaviorRelay<Blockchain> = .init(value: .sepoliaEthereum) // todo: support change blockchain
+    let nativeBalanceRelay: BehaviorRelay<String> = .init(value: "-.-")
 
     private let walletManager: WalletManagerProtocol
     private let blockchainInteractionProvider: BlockchainInteractionProvider
 
     private let disposeBag = DisposeBag()
+    private var nativeTokenBalancePollingDisposable: Disposable?
 
     init(
         walletManager: WalletManagerProtocol,
@@ -27,18 +29,30 @@ final class HomeViewModel {
     ) {
         self.walletManager = walletManager
         self.blockchainInteractionProvider = blockchainInteractionProvider
+        setUpBlockchainInteractionProvider()
 
         setUpBindings()
+    }
+
+    func loadData() {
+
     }
 
     func displayedAddress() -> String? {
         walletManager.addressStringValue()?.truncatingMiddle()
     }
+
+    func nativeTokenSymbol() -> String {
+        blockchainRelay.value.nativeTokenSymbol
+    }
 }
 
 extension HomeViewModel {
     private func setUpBindings() {
-        blockchainRelay.subscribe(onNext: { [weak self] _ in
+        blockchainRelay
+            .skip(1)
+            .distinctUntilChanged()
+            .subscribe(onNext: { [weak self] _ in
             self?.setUpBlockchainInteractionProvider()
         })
         .disposed(by: disposeBag)
@@ -51,20 +65,36 @@ extension HomeViewModel {
                     keystore: KeystoreManager([walletManager.keystore]),
                     blockchain: blockchainRelay.value
                 )
-
-                try await blockchainInteractionProvider.getNativeTokenBalance(of: walletManager.address()!)
-
-                let hash = try await blockchainInteractionProvider.sendNativeToken(
-                    from: walletManager.address()!,
-                    to: EthereumAddress("0xBAeDaE6Dd72AdDf64AfE201cE9e7a4A28F0c5ce9")!,
-                    value: BigUInt("0.01", .ether)!
-                )
-                print(hash)
-
-
+                pollingNativeTokenBalance()
             } catch {
                 // todo: error handle
                 print(error)
+            }
+        }
+    }
+
+    private func pollingNativeTokenBalance() {
+        nativeTokenBalancePollingDisposable?.dispose()
+
+        fetchNativeTokenBalance()
+        nativeTokenBalancePollingDisposable = Observable<Int>.interval(DispatchTimeInterval.seconds(10), scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] _ in
+                self?.fetchNativeTokenBalance()
+            })
+        nativeTokenBalancePollingDisposable?.disposed(by: disposeBag)
+    }
+
+    private func fetchNativeTokenBalance() {
+        guard let address = walletManager.address() else { return }
+        Task {
+            do {
+                let balance = try await blockchainInteractionProvider.getNativeTokenBalance(of: address)
+                let formatted = CryptoNumberFormatter.short.string(from: BigInt(balance), decimals: 18)
+                nativeBalanceRelay.accept(formatted)
+
+                print("Native token balance fetched: \(formatted)")
+            } catch {
+                nativeBalanceRelay.accept("-.-")
             }
         }
     }

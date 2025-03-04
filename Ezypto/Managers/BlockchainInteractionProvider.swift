@@ -14,14 +14,14 @@ final class BlockchainInteractionProvider {
 
     private var webe3Client: Web3?
 
-    func getNativeTokenBalance(of address: EthereumAddress) async throws {
+    func getNativeTokenBalance(of address: EthereumAddress) async throws -> BigUInt {
         guard let webe3Client else {
             throw BlockchainInteractionProviderError.web3ClientNotReady
         }
 
         do {
             let result = try await webe3Client.eth.getBalance(for: address)
-            print(result)
+            return result
         } catch {
             throw BlockchainInteractionProviderError.failToGetNativeTokenBalance
         }
