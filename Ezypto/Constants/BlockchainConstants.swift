@@ -10,6 +10,7 @@ import Foundation
 enum BlockchainConstants {
     static let sepoliaBlockchainName: String = "Ethereum Sepolia"
     static let sepoliaBlockchainLogo: String = "ethereum-log"
-    static let sppoliaNativeTokenSymbol: String = "ETH"
+    static let sepoliaNativeTokenSymbol: String = "ETH"
     static let sepoliaRPCURL: URL = URL(string: "https://ethereum-sepolia-rpc.publicnode.com")!
+    static let sepoliaChainId: Int = 11155111
 }

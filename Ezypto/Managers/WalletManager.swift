@@ -10,6 +10,7 @@ import web3swift
 import Web3Core
 
 protocol WalletManagerProtocol {
+    var keystore: BIP32Keystore { get }
     func addresses() -> [EthereumAddress]?
     func address(at index: Int) -> EthereumAddress?
     func addressStringValue(at index: Int) -> String?
@@ -28,7 +29,7 @@ extension WalletManagerProtocol {
 
 final class WalletManager: WalletManagerProtocol {
 
-    private let keystore: BIP32Keystore
+    let keystore: BIP32Keystore
 
     init(keystore: BIP32Keystore) {
         self.keystore = keystore
@@ -59,9 +60,6 @@ extension WalletManager {
             guard let keystore = try BIP32Keystore(mnemonics: mnemonics, password: "") else {
                 throw WalletManagerError.failToGenerateKeystore
             }
-            print("===Keystore Generated===")
-            print("EVM Address: \(String(describing: keystore.addresses?.first))")
-            print("========================")
             return WalletManager(keystore: keystore)
         } catch {
             throw error

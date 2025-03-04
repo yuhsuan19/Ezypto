@@ -17,7 +17,7 @@ final class HomeCoordinator: Coordinator, Presentable {
         let viewController = HomeViewController(viewModel: viewModel)
         viewController.onRoute = { [weak self] route in
             switch route {
-            case let .account:
+            case .account:
                 self?.routeToAccount()
             }
         }

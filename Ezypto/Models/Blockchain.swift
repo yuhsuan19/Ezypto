@@ -36,7 +36,7 @@ extension Blockchain {
     var nativeTokenSymbol: String {
         switch self {
         case .sepoliaEthereum:
-            return BlockchainConstants.sppoliaNativeTokenSymbol
+            return BlockchainConstants.sepoliaNativeTokenSymbol
         }
     }
 
@@ -47,4 +47,17 @@ extension Blockchain {
         }
     }
 
+    var rpcURL: URL {
+        switch self {
+        case .sepoliaEthereum:
+            return BlockchainConstants.sepoliaRPCURL
+        }
+    }
+
+    var chainId: Int {
+        switch self {
+        case .sepoliaEthereum:
+            return BlockchainConstants.sepoliaChainId
+        }
+    }
 }

@@ -57,9 +57,6 @@ final class ImportWalletViewModel {
             let mnemonics = try MnemonicsHelper.join(phrases: recoveryPhrasesRelay.value)
             try keychainManager.saveMnemonicToKeychain(mnemonic: mnemonics)
             let walletManager = try WalletManager.generate(mnemonics: mnemonics)
-
-            print("=====")
-            print(walletManager.address())
         } catch {
             // todo: handle error
             print(error)
