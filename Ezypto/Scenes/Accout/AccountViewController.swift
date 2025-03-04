@@ -12,6 +12,7 @@ import RxCocoa
 final class AccountViewController: UIViewController {
 
     var onRoute: ((Route) -> Void)?
+    var onLogout: (() -> Void)?
 
     private let viewModel: AccountViewModel
 

@@ -9,6 +9,8 @@ import UIKit
 
 final class HomeCoordinator: Coordinator, Presentable {
 
+    var onLogout: (() -> Void)?
+
     private let router: NavigationRouter
     private let walletManager: WalletManagerProtocol
 
@@ -20,6 +22,9 @@ final class HomeCoordinator: Coordinator, Presentable {
             case .account:
                 self?.routeToAccount()
             }
+        }
+        viewController.onLogout = { [weak self] in
+            self?.onLogout?()
         }
         return viewController
     }()

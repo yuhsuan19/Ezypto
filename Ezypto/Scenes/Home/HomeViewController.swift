@@ -10,6 +10,7 @@ import RxSwift
 
 final class HomeViewController: UIViewController {
 
+    var onLogout: (() -> Void)?
     var onRoute: ((Route) -> Void)?
 
     private lazy var blockchainChip: BlockchainChipView = BlockchainChipView()

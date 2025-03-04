@@ -9,6 +9,8 @@ import UIKit
 
 final class AccountCoordinator: Coordinator, Presentable {
 
+    var onLogout: (() -> Void)?
+
     private let walletManager: WalletManagerProtocol
 
     private let router: NavigationRouter
@@ -21,6 +23,9 @@ final class AccountCoordinator: Coordinator, Presentable {
             case .back:
                 self?.router.popModule(animated: true)
             }
+        }
+        viewController.onLogout = { [weak self] in
+            self?.onLogout?()
         }
         return viewController
     }()
