@@ -10,6 +10,7 @@ import RxRelay
 import RxSwift
 import web3swift
 import Web3Core
+import BigInt
 
 final class HomeViewModel {
 
@@ -53,9 +54,13 @@ extension HomeViewModel {
 
                 try await blockchainInteractionProvider.getNativeTokenBalance(of: walletManager.address()!)
 
-                try await blockchainInteractionProvider.sendNativeToken(from: walletManager.address()!, keystore: walletManager.keystore)
+                let hash = try await blockchainInteractionProvider.sendNativeToken(
+                    from: walletManager.address()!,
+                    to: EthereumAddress("0xBAeDaE6Dd72AdDf64AfE201cE9e7a4A28F0c5ce9")!,
+                    value: BigUInt("0.01", .ether)!
+                )
+                print(hash)
 
-                try await blockchainInteractionProvider.getNativeTokenBalance(of: walletManager.address()!)
 
             } catch {
                 // todo: error handle

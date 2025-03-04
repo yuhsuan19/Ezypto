@@ -25,36 +25,17 @@ final class BlockchainInteractionProvider {
         } catch {
             throw BlockchainInteractionProviderError.failToGetNativeTokenBalance
         }
-
-
-//        let privateKeyData = Data(hex: "YourPrivateKeyHex")
-//        let keystore = try! BIP32Keystore(privateKeyData)!
-//        let keystoreManager = KeystoreManager([keystore])
-//        web3.addKeystoreManager(keystoreManager)
-//
-//        var transaction: CodableTransaction = .emptyTransaction
-//        transaction.from = add
-//        transaction.value = BigUInt(1000)
-//        try await web3.eth.send(transaction)
-
     }
-//    0xBAeDaE6Dd72AdDf64AfE201cE9e7a4A28F0c5ce9
 
-    func sendNativeToken(from: EthereumAddress, keystore: BIP32Keystore) async throws {
-        guard let webe3Client else {
-            throw BlockchainInteractionProviderError.web3ClientNotReady
-        }
-
-        var transaction: CodableTransaction = CodableTransaction(type: .eip1559, to: EthereumAddress("0xBAeDaE6Dd72AdDf64AfE201cE9e7a4A28F0c5ce9")!, value: BigUInt(1093))
-//        transaction.from = from
-//        transaction.to = EthereumAddress("0xBAeDaE6Dd72AdDf64AfE201cE9e7a4A28F0c5ce9")!
-//        transaction.value = BigUInt(1093)
-
+    @discardableResult
+    func sendNativeToken(from: EthereumAddress, to: EthereumAddress, value: BigUInt) async throws -> String {
         do {
-            let privateKey = try keystore.UNSAFE_getPrivateKeyData(password: "", account: from)
-            try transaction.sign(privateKey: privateKey, useExtraEntropy: false)
-            let result = try await webe3Client.eth.send(transaction)
-            print(result)
+            var tx: CodableTransaction = .emptyTransaction
+            tx.from = from
+            tx.to = to
+            tx.value = value
+
+            return try await sendTransaction(transaction: tx, abi: Web3.Utils.coldWalletABI)
         } catch {
             throw error
         }
@@ -79,9 +60,40 @@ final class BlockchainInteractionProvider {
     }
 }
 
+// MARK: - Private functions
+extension BlockchainInteractionProvider {
+    private func sendTransaction(transaction: CodableTransaction, abi: String) async throws -> String {
+        guard let webe3Client else {
+            throw BlockchainInteractionProviderError.web3ClientNotReady
+        }
+        do {
+            var transaction = transaction
+            let contract = webe3Client.contract(Web3.Utils.coldWalletABI, at: transaction.to, abiVersion: 2)
+            contract?.transaction = transaction
+            guard let operation = contract?.createWriteOperation() else {
+                throw BlockchainInteractionProviderError.failToPrepareOperation
+            }
+            transaction.gasLimit = try await webe3Client.eth.estimateGas(for: operation.transaction)
+            transaction.gasPrice = try await webe3Client.eth.gasPrice()
+            let policies = Policies(
+                noncePolicy: .latest,
+                gasLimitPolicy: .manual(transaction.gasLimit),
+                gasPricePolicy: .manual(transaction.gasPrice ?? 0),
+                maxFeePerGasPolicy: .automatic,
+                maxPriorityFeePerGasPolicy: .automatic
+            )
+            return try await operation.writeToChain(password: "", policies: policies).hash
+
+        } catch {
+            throw error
+        }
+    }
+}
+
 // MARK: - Error
 enum BlockchainInteractionProviderError: Error {
     case failToSetUpWeb3Client
     case web3ClientNotReady
     case failToGetNativeTokenBalance
+    case failToPrepareOperation
 }
